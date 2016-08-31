@@ -9,7 +9,7 @@ from PyQt5.QtGui import QIcon
 
 class CompressApp(QWidget):
 
-    checkbox = True
+    checkbox = False
     speed = "faster"
 
     def __init__(self):
@@ -92,19 +92,36 @@ class CompressApp(QWidget):
         
     def compressDir(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
+        print("TESTING TESTING TESTING                      TESTING                     TESTING")
         print (directory)
+        print("TESTING TESTING TESTING                      TESTING                     TESTING")
+        print(self.checkbox)
+        print("TESTING TESTING TESTING                      TESTING                     TESTING")
         for i in os.listdir(directory):
+            print(i)
             if i.endswith(".mp4"): 
-                os.system("ffmpeg -threads 8 -i " + directory + "/" + i + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + directory + "/" + i + "Compressed.mp4 -y")
+                print("TESTING1233454577889")
+                print(i)
+                print(directory + "/" + i)
+                temp = directory + "/" + i
+                print("1234213421341234")
+                print(temp)
+                os.system("ffmpeg -threads 8 -i " + temp + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + directory + "/" + i + "Compressed.mp4 -y")
+                #os.system("ffmpeg -threads 8 -i " + directory + "/" + i + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + directory + "/" + i + "Compressed.mp4 -y")
+                print("1")
                 if self.checkbox == True:
-                    os.system("del " + directory + "/" + i)
-                    os.system("move " + directory + "/" + i + "Compressed.mp4 " + directory + i)
+                    print("2")
+                    os.system("del " + directory + "\\" + i + ".mp4")
+                    print("3")
+                    os.system("move " + directory + "\\" + i + "Compressed.mp4 " + directory + "/" + i)
+                    print("4")
                 continue
             else:
                 continue
 
     def compressFile(self):
         print("Testing")
+        print(self.checkbox)
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
         os.system("ffmpeg -threads 8 -i " + fname[0] + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + fname[0] + "Compressed.mp4 -y")
         if self.checkbox == True:
