@@ -29,7 +29,7 @@ Windows:
 
 	Note
 
-		-Refrain from using special characters in the title of any videos you want to compress (!@#$%^&*())
+		-Refrain from using the special characters & and *, along with spaces, in the title of any videos you want to compress (&, *)
 
 
 OSX/Linux
