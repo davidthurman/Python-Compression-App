@@ -92,23 +92,28 @@ class CompressApp(QWidget):
         
     def compressDir(self):
         directory = str(QFileDialog.getExistingDirectory(self, "Select Directory"))
-        print (directory)
+        x = 0
         for i in os.listdir(directory):
+            if x == 0:
+                directory = self.makeReadable(directory)
+            x = x + 1
             if i.endswith(".mp4"): 
+                i = str(self.makeReadable(i))
                 os.system("time ffmpeg -threads 8 -i " + directory + "/" + i + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + directory + "/" + i + "Compressed.mp4 -y")
                 if self.checkbox == True:
                     os.system("rm " + directory + "/" + i)
-                    os.system("mv " + directory + "/" + i + "Compressed.mp4 " + directory + i)
+                    os.system("mv " + directory + "/" + i + "Compressed.mp4 " + directory + "/" + i)
                 continue
             else:
                 continue
 
     def compressFile(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
-        os.system("time ffmpeg -threads 8 -i " + fname[0] + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + fname[0] + "Compressed.mp4 -y")
+        newName = str(self.makeReadable(fname[0]))
+        os.system("time ffmpeg -threads 8 -i " + newName + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + newName + "Compressed.mp4 -y")
         if self.checkbox == True:
-            os.system("rm " + fname[0])
-            os.system("mv " + fname[0] + "Compressed.mp4 " + fname[0])
+            os.system("rm " + newName)
+            os.system("mv " + newName + "Compressed.mp4 " + newName)
         
     def checkboxChange(self, state):
         if state == Qt.Checked:
@@ -129,6 +134,27 @@ class CompressApp(QWidget):
             self.speed = "medium"
         else:
             self.speed = "slow"
+
+    def makeReadable(self, myString):
+        myString = myString.replace(" ", "\ ")
+        myString = myString.replace("(", "\(")
+        myString = myString.replace(")", "\)")
+        myString = myString.replace("*", "\*")
+        myString = myString.replace("!", "\!")
+        myString = myString.replace("@", "\@")
+        myString = myString.replace("#", "\#")
+        myString = myString.replace("$", "\$")
+        myString = myString.replace("%", "\%")
+        myString = myString.replace("^", "\^")
+        myString = myString.replace("&", "\&")
+        myString = myString.replace("<", "\<")
+        myString = myString.replace(">", "\>")
+        myString = myString.replace("[", "\[")
+        myString = myString.replace("]", "\]")
+        myString = myString.replace("|", "\|")
+        myString = myString.replace("{", "\{")
+        myString = myString.replace("}", "\}")
+        return myString
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
