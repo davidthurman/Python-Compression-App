@@ -9,7 +9,7 @@ from PyQt5.QtGui import QIcon
 
 class CompressApp(QWidget):
 
-    checkbox = True
+    checkbox = False
     speed = "faster"
 
     def __init__(self):
