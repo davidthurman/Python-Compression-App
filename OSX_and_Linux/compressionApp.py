@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 import os
 import sys
+import subprocess
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (QWidget, QPushButton, QLineEdit, QAction, QFileDialog, QCheckBox,
     QInputDialog, QSlider, QVBoxLayout, QLCDNumber, QApplication, QLabel, QHBoxLayout, QMainWindow, QTextEdit)
@@ -14,6 +15,7 @@ class CompressApp(QWidget):
 
     def __init__(self):
         super().__init__()
+        self.checkForFfmpeg()
         self.initUI()
         
     def initUI(self):      
@@ -110,6 +112,7 @@ class CompressApp(QWidget):
     def compressFile(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file', '/home')
         newName = str(self.makeReadable(fname[0]))
+        #os.system("ffmpeg -i " + newName + " -c:v libx265 -preset medium -crf 28 -c:a aac -b:a 128k output.mp4")
         os.system("time ffmpeg -threads 8 -i " + newName + " -c:v libx265 -preset " + self.speed + " -quality 1 -c:a aac -b:a 128k -strict -2 " + newName + "Compressed.mp4 -y")
         if self.checkbox == True:
             os.system("rm " + newName)
@@ -155,6 +158,25 @@ class CompressApp(QWidget):
         myString = myString.replace("{", "\{")
         myString = myString.replace("}", "\}")
         return myString
+
+    def checkForFfmpeg(self):
+        try:
+            ffmpegPresent = subprocess.check_output(['which', 'ffmeg'])
+        except subprocess.CalledProcessError as e:
+            ffmpegPresent = "FFMPEG is not present"
+        print (ffmpegPresent)
+        if ffmpegPresent == "FFMPEG is not present":
+            try:
+                brewPresent = subprocess.check_output(['which', 'brew'])
+            except subprocess.CalledProcessError as e:
+                brewPresent = "Brew is not present"
+            print (brewPresent)
+            if brewPresent == "Brew is not present":
+                os.system('/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"')
+            os.system('brew install ffmpeg --with-x265')
+            os.system('sudo mv Downloads/ffmpeg /usr/local/bin/')
+
+
 
 if __name__ == '__main__':
     app = QApplication(sys.argv)
