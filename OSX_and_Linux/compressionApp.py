@@ -15,7 +15,7 @@ class CompressApp(QWidget):
 
     def __init__(self):
         super().__init__()
-        self.checkForFfmpeg()
+        #self.checkForFfmpeg()
         self.initUI()
         
     def initUI(self):      
@@ -161,7 +161,7 @@ class CompressApp(QWidget):
 
     def checkForFfmpeg(self):
         try:
-            ffmpegPresent = subprocess.check_output(['which', 'ffmeg'])
+            ffmpegPresent = subprocess.check_output(['which', 'ffmpeg'])
         except subprocess.CalledProcessError as e:
             ffmpegPresent = "FFMPEG is not present"
         print (ffmpegPresent)
